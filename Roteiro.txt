@@ -1,0 +1,95 @@
+Pasta principal SUE_SQLIZE -> Contém as sub pastas 
+
+1-> Database -- Contém os arquivos do banco
+2-> Views -- Contém os arquivos  HTML
+3-> Public -- Contém os arquivos staticos como: IMG, CSS, JS
+4-> O aquivo index.js fica na página principal SUE_SQLIZE
+
+Para iniciar o projeto 
+1- npm init(inicia o projeto, encima disso instalo as bibliotecas desejadas)
+2- Instalar biblioteca Express: npm install express --save
+3- Instalar biblioteca EJS: npm install ejs 
+4- Instalar biblioteca MySQL2: npm install --save mysql2
+5- Instalar a biblioteca SEQUELAZE: npm install sequelize --save 
+6- Instalar a biblioteca body-parser: npm install body-parser --save
+
+
+M.V.C           Model esta ligado ao database(MODEL-Representação de um objeto do banco)
+o i o           Viwe esta ligado ao views  
+d e n           Control está ligado ao index.js
+e w t
+l   r
+    o
+    l
+
+CONFIGURAÇÃO DO SERVIDOR EXPRESS
+Criar arquivo principal index.js 
+esxpress: Importa biblioteca express que é um framework para Node.js.
+connection: Importa a conexão com o banco de dados.
+bodyParser: Importa o body-parser para processar dados enviados via POST.
+app: Cria uma aplicação Express
+port: Define a porta onde o servidor irá rodar
+app.use(bodyParser.urlencoded({ extended: true })) e app.use(bodyParser.json()): Configura o body-parser para processar requisições com dados codificados em URL e JSON.
+app.set("view engine", "ejs"): Configura o EJS como a engine de visualização padrão para renderizar páginas HTML.
+
+NO FINAL DA PÁGINA DE CÓDIGO TESTAR CONECXÃO COM BANCO E INICIAR PORTA DO SERVIDOR EXPRESS NA PORTA DEFINIDA
+connection.authenticate(): Testa a conexão com o banco de dados.
+then: Se a conexão for bem-sucedida, imprime uma mensagem de sucesso.
+catch: Se houver um erro, imprime a mensagem de erro.
+
+
+
+NA PASTA Database 
+criar um arquivo database.js
+ENTRAR NO BANCO DE DADOS MySQL
+Criar o banco vazio: Create (nome banco)
+use (nome banco)
+No arquivo Database/database.js-> 
+Importa a biblioteca Sequelize para criar conexão com o banco
+Importa uma função utilitária do módulo util/types.
+Cria uma instância de Sequelize. Esta instancia é uma conexão com o banco de dados MySQL.
+Exportando o módulo para que fique visível em outro programa (possa chamar essa conexão). Faz com que a conexão fique visível para outros programas
+
+
+Definição do Modelo
+DataTypes e Sequelize: Importa os tipos de dados e a biblioteca Sequelize.
+Importa o modulo de conecxão com o banco de dados
+const connection = require("./database");
+Definição do modelo (MODEL) que corresponde à uma tabela do banco de dados.
+No final faz a sicronização do modelo 
+sincronizarDisciplina: Função assíncrona que sincroniza o modelo de disciplina com o banco de dados.
+Disciplina.sync({ force: false }): Sincroniza o modelo com a tabela no banco de dados, sem forçar a recriação da tabela.
+try-catch-finally: Captura e trata erros durante a sincronização e garante que a conexão seja fechada.
+module.exports: Exporta o modelo de Disciplina para que possa ser utilizado em outros arquivos. O código comentado mostra alternativas de exportação, incluindo a função de sincronização.  
+
+
+
+
+
+create view cursoDisciplina As 
+SELECT 
+    cd.curso_idCurso,
+    c.nome,
+    cd.disciplina_idDisciplina,
+    d.id_disciplina
+FROM
+    curso AS c,
+    disciplina AS d,
+    curso_has_disciplinas AS cd
+WHERE
+    d.id_disciplina = cd.disciplina_idDisciplina
+        AND c.id_curso = cd.curso_idCurso;
+        
+select * from cursoDisciplina
+        
+        
+select cd.Professor_idProfessor, p.id_professor, p.Titulo, cd.
+
+
+
+
+REFERÊNCIAS 
+https://www.npmjs.com/
+https://ejs.co/#install
+https://www.npmjs.com/package/mysql2
+https://expressjs.com/pt-br/

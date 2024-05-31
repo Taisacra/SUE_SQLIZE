@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD usuario</title>
+  </head>
+  <body>
+    <h1>CRUD de usuario</h1>
+
+    <!-- Formulário para adicionar ou editar disciplinas -->
+    <!-- <form action="/editar_disciplina" method="POST"> -->
+    <!-- <form action="/editardisciplina" method="POST"> -->
+    <form action="/editar_usuario" method="POST">
+      <label for="nome_usuario">Nome:</label>
+      <input type="text" id="nome_usuario" name="nome_usuario" required />
+      <br />
+      <label for="cpf">CPF:</label>
+      <input type="number" id="cpf" name="cpf" required />
+      <br/>
+      <label for="telefone">Telefone:</label>
+      <input type="text" id="telefone" name="telefone" required/>
+      <br />
+      <label for="data_nascimento">Data nascimento:</label>
+      <input type="text" id="data_nascimento" name="data_nascimento" required/>
+      <br />
+      <label for="cep">CEP:</label>
+      <input type="text" id="cep" name="cep" required/>
+      <br />
+      <label for="rua">Rua:</label>
+      <input type="text" id="rua" name="rua" required/>
+      <br />
+      <label for="numero_casa">Número casa:</label>
+      <input type="text" id="numero_casa" name="numero_casa" required/>
+      <br />
+      <label for="bairro">Bairro:</label>
+      <input type="text" id="bairro" name="bairro" required/>
+      <br />
+      <label for="cidade">Cidade:</label>
+      <input type="text" id="cidade" name="cidade" required/>
+      <br />
+      <label for="estado">Estado:</label>
+      <input type="text" id="estado" name="estado" required/>
+      <br />
+      <label for="complemento">Complemento:</label>
+      <input type="text" id="complemento" name="complemento" required/>
+      <br />
+
+      <!-- <button type="submit">Editar Disciplina</button> -->
+      <button type="submit" name="action" value="alterar">Alterar</button>
+      <button type="submit" name="action" value="incluir">Incluir</button>
+      <input type="hidden" id="idUsuario" name="idUsuario" />
+    </form>
+    
+
+    <!-- Tabela para exibir as disciplinas -->
+    <h2>Relação de Usúarios Cadastrados</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Telefone</th>
+          <th>Data nascimento</th>
+          <th>CEP</th>
+          <th>Rua</th>
+          <th>Número casa</th>
+          <th>Bairro</th>
+          <th>Cidade</th>
+          <th>Estado</th>
+          <th>Complemento</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% usuarios.forEach(function(usuario) { %>
+        <tr>
+          <td><%= usuario.nome_usuario %></td>
+          <td><%= usuario.cpf %></td>
+          <td><%= usuario.telefone %></td>
+          <td><%= usuario.data_nascimento %></td>
+          <td><%= usuario.cep %></td>
+          <td><%= usuario.rua %></td>
+          <td><%= usuario.numero_casa %></td>
+          <td><%= usuario.bairro %></td>
+          <td><%= usuario.cidade %></td>
+          <td><%= usuario.estado %></td>
+          <td><%= usuario.complemento %></td>
+          <td>
+           
+            <button
+              onclick="preencherFormulario('<%= usuario.nome_usuario %>', '<%= usuario.cpf %>', '<%= usuario.telefone %>', 
+               '<%= usuario.data_nascimento %>', '<%= usuario.cep %>','<%= usuario.rua %>','<%= usuario.numero_casa %>',
+               '<%= usuario.bairro %>','<%= usuario.cidade %>','<%= usuario.estado %>','<%= usuario.complemento %>','<%= usuario.idUsuario %>')">
+              Editar
+            </button>
+            <!-- Botão para excluir disciplina -->
+            <form action="/excluir_usuario/<%= usuario.idUsuario %>" method="POST">
+              <button type="submit">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <script>
+      // Função para preencher os campos do formulário ao clicar em editar
+      function preencherFormulario(
+        nome_usuario,
+        cpf,
+        telefone,
+        data_nascimento,
+        cep,
+        rua,
+        numero_casa,
+        bairro,
+        cidade,
+        estado,
+        complemento
+      ) {
+        document.getElementById("nome_usuario").value = nome_usuario;
+        document.getElementById("cpf").value = cpf;
+        document.getElementById("telefone").value = telefone;
+        document.getElementById("data_nascimento").value = data_nascimento;
+        document.getElementById("cep").value = cep;
+        document.getElementById("rua").value = rua;
+        document.getElementById("numero_casa").value = numero_casa;
+        document.getElementById("bairro").value = bairro;
+        document.getElementById("cidade").value = cidade;
+        document.getElementById("estado").value = estado;
+        document.getElementById("complemento").value = complemento;
+        
+      }
+    </script>
+  </body>
+</html>

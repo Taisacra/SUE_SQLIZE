@@ -1,23 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD de Coordenador</title>
-</head>
-<body>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD Coordenador</title>
+  </head>
+  <body>
     <h1>CRUD de Coordenador</h1>
-    <form action="/editar_coordenador" method="POST">
-          <label for="Usuario_idUsuario">Usuario:</label>
-          <select id="Usuario_idUsuario" name="Usuario_idUsuario">
-            <option value="Usuario_idUsuario" data-id="10">Volvo</option>
-          </select>
-          <input type="submit">
-        <!-- <button type="submit">Editar Disciplina</button> -->
-        <button type="submit" name="action" value="alterar">Alterar</button>
-        <button type="submit" name="action" value="incluir">Incluir</button>
-        <input type="hidden" id="id_disciplina" name="id_disciplina" />
-      </form>
-</body>
+
+    <!-- Formulário para adicionar ou editar associação entre curso e disciplina -->
+    <form action="/editar_Coordenador" method="POST">
+      <!-- Select para escolher o curso -->
+      <label for="Usuario_idUsuario">Usuário:</label>
+      <select id="Usuario_idUsuario" name="Usuario_idUsuario" required>
+        <% usuarios.forEach(function(usuario) { %>
+        <option value="<%= usuario.idUsuario %>" data-id="<%= usuario.idUsuario %>">
+          <%= usuario.nome_usuario %>
+        </option>
+        <% }); %>
+      </select>
+      <br />
+
+    
+
+      <!-- Botões para confirmar a inclusão ou edição -->
+      <button type="submit" name="action" value="alterar">Alterar</button>
+      <button type="submit" name="action" value="incluir">Incluir</button>
+      <input type="hidden" id="idCoordenador" name="idCoordenador"/>
+    </form>
+
+    <!-- Tabela para exibir as associações entre curso e disciplina -->
+    <h2>Associações entre Usuario e Coordenador</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% coordenadores.forEach(function(coordenador) { %>
+        <tr>
+          <td><%= coordenador.usuario.nome_usuario %></td>
+          <td>
+            <!-- Botão para editar associação -->
+            <button
+              onclick="preencherFormulario('<%= coordenador.usuario.nome_usuario %>',  '<%= coordenador.idCoordenador %>')"
+            >
+              Editar
+            </button>
+            <!-- Formulário para excluir associação -->
+            <form
+              action="/excluir_coordenador/<%= coordenador.idCoordenador %>"
+              method="POST"
+            >
+              <button type="submit">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <script>
+      // Função para preencher os campos do formulário ao clicar em editar
+      function preencherFormulario(Usuario_idUsuario,idCoordenador) {
+        document.getElementById("Usuario_idUsuario").value = Usuario_idUsuario;
+        document.getElementById("idCoordenador").value = idCoordenador;
+      }
+    </script>
+  </body>
 </html>

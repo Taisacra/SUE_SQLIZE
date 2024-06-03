@@ -2,23 +2,29 @@ const { DataTypes, Sequelize } = require("sequelize");
 const connection = require("./database");
 
 // Definição do modelo (MODEL) que corresponde à uma tabela do banco de dados.
-const Curso_has_disciplinas = connection.define(
-  "curso_has_disciplinas",
+const DisciplinaCurso = connection.define(
+  "disciplinaCurso",
   {
-    curso_idCurso: {
+    id_disciplinaCurso:{
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
+    },
+    curso_id_curso: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: false,
+      autoIncrement: false,
         refereces: {
           model:"Curso",
           key:"id_curso",
         },
     },
-    disciplina_idDisciplina: {
+    disciplina_id_disciplina: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true,
+        primaryKey: false,
         autoIncrement: false, 
         refereces: {
           model:"Disciplina",
@@ -28,13 +34,13 @@ const Curso_has_disciplinas = connection.define(
   },
   {
     timestamps: true, // Habilita a criação automática de campos de timestamp
-    tableName: "curso_has_disciplinas", // Nome da tabela no banco de dados
+    tableName: "DisciplinaCurso", // Nome da tabela no banco de dados
   }
 );
 
-async function sincronizarCurso_has_disciplinas() {
+async function sincronizarDisciplinaCurso() {
   try {
-    await Curso_has_disciplinas.sync({ force: false });
+    await DisciplinaCurso.sync({ force: false });
   } catch (error) {
     console.error("Erro ao sincronizar a tabela: ", error);
   } finally {
@@ -44,13 +50,12 @@ async function sincronizarCurso_has_disciplinas() {
 }
 
 //Disciplina.sync({ force: false }).then(() => {});
+ module.exports = DisciplinaCurso;
+//module.exports = sincronizarDisciplinaCurso();
 
-module.exports = {Curso_has_disciplinas, sincronizarCurso_has_disciplinas };
-//module.exports = sincronizarDisciplina();
-
- /* module.exports = {
-  Curso_has_disciplinas: Curso_has_disciplinas,
-    sincronizarCurso_has_disciplinas: sincronizarCurso_has_disciplinas
+/*  module.exports = {
+    DisciplinaCurso: DisciplinaCurso,
+    sincronizarDisciplinaCurso: sincronizarDisciplinaCurso
   };  */
 
 

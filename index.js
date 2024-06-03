@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 //configura a biblioteca padrão de renderização de páginas HTML o EJS
-const port = 3000;
+const port = 3005;
 // importa o módulo database criado  dentro da pasta Database
 const connection = require("./database/database");
 const bodyParser = require("body-parser");
@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 //Importa (MODEL) que corresponde à uma tabela do banco de dados.
 const Aluno = require("./database/Aluno");
 const Coordenador = require("./database/Coordenador");
-const Curso_has_disciplina = require('./database/Curso_has_disciplina');
+const DisciplinaCurso = require('./database/DisciplinaCurso');
 const Curso = require("./database/Curso");
 const DescricaoPagamento = require("./database/DescricaoPagamento");
 const Disciplina = require("./database/Disciplina");
@@ -30,9 +30,10 @@ const CursoDisciplinaVW = require("./database/cursoDisciplinaVW");
 const res = require('express/lib/response');
 
  /* Aluno.sincronizarAluno();
- Coordenador.sincronizarCoordenador();
- Curso_has_disciplinas.sincronizarCurso_has_disciplinas();
- Curso.sincronizarCurso();
+Coordenador.sincronizarCoordenador();
+Curso.sincronizarCurso();
+CursoDisciplinaVW.sincronizarCursoDisciplinaVW()
+DisciplinaCurso.sincronizarDisciplinaCurso();
  DescricaoPagamento.sincronizarDescricaoPagamento();
  Disciplina.sincronizarDisciplina();
  Pagamento.sincronizarPagamento();
@@ -43,8 +44,8 @@ const res = require('express/lib/response');
  Turma_has_Disciplinas.sincronizarTurma_has_Disciplinas();
  Turma.sincronizarTurma();
  Usuario.sincronizarUsuario(); */
-//CursoDisciplinaVW.sincronizarCursoDisciplinaVW()
 
+ 
 
 // ROTA PARA CRUD DISCIPLINA
 app.get("/disciplinas", (req, res) => {
@@ -154,6 +155,8 @@ app.get("/disciplinas", (req, res) => {
         .json({ error: "Erro ao excluir dados da tabela de disciplina." });
     }
   }); 
+
+
 
   // ROTA PARA CRUD DE USUÁRIO
   app.get("/usuario", (req, res) => {
@@ -269,123 +272,188 @@ app.get("/disciplinas", (req, res) => {
       }
     }
   });
+
   
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* //ROTA PARA CRUD COORDENADOR
-app.get("/coordenador", async (req, res) => {
-  try{
-  const resultadoUsuario = await Usuario.findAll({
-  const resultadoCoordenador = await Coordenador.findAll({
-    raw: true,
-    order: [
-      ["idCoordenador", "DESC"], // ASC = Crescente || DESC = Decrescente
-    ],
-  })
-    res.render("cad_coordenador", {
-    coordenador: coordenador,
-  });
-  })
-     
-  then((coordenador) => {
-    
-  });
-  }catch(erro){
-
-  }
-});
-// ESTA INCLUSÃO ESTÁ FUNCIONANDO
-if (action === "incluir") {
-  try {
-    //const { nome_disciplina, carga_horaria, descricao_disciplina } = req.body;
-    const id = req.params.id;
-    await Coordenador.create({
-      idCoordenador,
-      Usuario_idUsuario,
-    });
-    //res.status(201).json(disciplina);
-    res.status(201).redirect("/coordenador");
-  } catch (error) {
-    console.error(
-      "Erro ao inserir dados PARA COORDENADOR: /editardiscoordenador",
-      error
-    );
-    res.status(500).json({
-      error: "Erro ao inserir dados PARA COORDENADOR: /editardiscoordenador",
-    });
-  }
-}
-
-// A ALTERAÇÃO ESTÁ FUNCINANDO
-if (action === "alterar") {
-  try {
-    const {
-      nome_disciplina,
-      carga_horaria,
-      descricao_disciplina,
-      id_disciplina,
-    } = req.body;
-    const id = id_disciplina;
-    //const id = req.params.id;
-    const disciplina = await Disciplina.findByPk(id);
-    if (!disciplina) {
-      return res.status(404).json({
-        error: `Disciplina NÃO FOI encontrada - NA TABELA DE DISCIPLINAS - ID: ${id}.`,
-      });
-    }
-    disciplina.nome_disciplina = nome_disciplina;
-    disciplina.carga_horaria = carga_horaria;
-    disciplina.descricao_disciplina = descricao_disciplina;
-    await disciplina.save();
-    res.status(201).redirect("/disciplinas");
-  } catch (error) {
-    console.error(
-      `Erro ao ALTERAR dados PARA A DISCIPLINA: /editardisciplina ${nome_disciplina}`,
-      error
-    );
-    res.status(500).json({
-      error: `Erro ao ALTERAR dados PARA A DISCIPLINA. /editardisciplina ${nome_disciplina}`,
-    });
-  }
-}
-});
-
-
-
 // ROTA PARA CRUD DE COORDENADOR
 app.get("/coordenador", async (req, res) => {
   try {
-    // Usando Promise.all para buscar dados de ambas as tabelas de forma assíncrona
-    const [usuarios, coordenadores] = await Promise.all([
-      Usuario.findAll({ raw: true }),
-      Coordenador.findAll({
-        raw: true,
-        order: [["idCoordenador", "DESC"]],
-      }),
-    ]);
-
-    // Renderizando a página após a conclusão das consultas assíncronas
+    const coordenadores = await Coordenador.findAll();
+    const usuarios = await Usuario.findAll();
     res.render("cad_coordenador", {
-      usuarios: usuarios,
-      coordenadores: coordenadores,
+      coordenadores,
+      usuarios,
     });
   } catch (error) {
-    console.error("Ocorreu um erro:", error);
-    res.status(500).send("Ocorreu um erro ao buscar os coordenadores.");
+    console.error("Erro ao buscar associações de usuario a tabela de cordenador:", error);
+    res.status(500).send("Erro ao buscar associações de usuario a tabela de cordenador");
   }
-}); */
+});
+
+app.post("/editar_Coordenador", async (req, res) => {
+  try {
+    const { usuario, action } = req.body;
+
+    if (action === "incluir") {
+      await Coordenador.create({
+        Usuario_idUsuario: usuario,
+      });
+      res.redirect("/coordenador");
+    } else if (action === "alterar") {
+      const id_Coordenador = req.body.idCoordenador;
+      await Coordenador.update(
+        { idUsuario: usuario },
+        { where: { idCoordenador } }
+      );
+      res.redirect("/coordenador");
+    } else {
+      res.status(400).send("Ação inválida.");
+    }
+  } catch (error) {
+    console.error(
+      "Erro ao inserir ou editar associação entre usuario e coordenador:",
+      error
+    );
+    res
+      .status(500)
+      .send("Erro ao inserir ou editar associação entre usuario e coordenador.");
+  }
+});
+
+app.post("/excluir_coordenador/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Coordenador.destroy({ where: { idCoordenador: id } });
+    res.redirect("/coordenador");
+  } catch (error) {
+    console.error(
+      "Erro ao excluir associação entre usuario e coordenador:",
+      error
+    );
+    res
+      .status(500)
+      .send("Erro ao excluir associação entre usuario e coordenador.");
+  }
+});
+
+
+
+// ROTA PARA CRUD DISCIPLINA_CURSO
+// Rota para inserir ou editar uma associação entre disciplina e curso
+app.get("/disciplina_curso", async (req, res) => {
+  try {
+    const cursos = await Curso.findAll();
+    const disciplinas = await Disciplina.findAll();
+
+    const disciplinaCursos = await DisciplinaCurso.findAll();
+    res.render("cad_curso_disciplina", {
+      disciplinaCursos,
+      cursos,
+      disciplinas,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar associações de disciplinas e cursos:", error);
+    res.status(500).send("Erro ao buscar associações de disciplinas e cursos.");
+  }
+});
+
+app.post("/editar_disciplinaCurso", async (req, res) => {
+  try {
+    const { curso, disciplina, action } = req.body;
+
+    if (action === "incluir") {
+      await DisciplinaCurso.create({
+        curso_id_curso: curso,
+        disciplina_id_disciplina: disciplina,
+      });
+      res.redirect("/disciplina_curso");
+    } else if (action === "alterar") {
+      const id_disciplinaCurso = req.body.id_disciplinaCurso;
+      await DisciplinaCurso.update(
+        { id_curso: curso, id_disciplina: disciplina },
+        { where: { id_disciplinaCurso } }
+      );
+      res.redirect("/disciplina_curso");
+    } else {
+      res.status(400).send("Ação inválida.");
+    }
+  } catch (error) {
+    console.error(
+      "Erro ao inserir ou editar associação entre disciplina e curso:",
+      error
+    );
+    res
+      .status(500)
+      .send("Erro ao inserir ou editar associação entre disciplina e curso.");
+  }
+});
+
+// Rota para excluir uma associação entre disciplina e curso
+app.post("/excluir_disciplina_curso/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await DisciplinaCurso.destroy({ where: { id_disciplinaCurso: id } });
+    res.redirect("/disciplina_curso");
+  } catch (error) {
+    console.error(
+      "Erro ao excluir associação entre disciplina e curso:",
+      error
+    );
+    res
+      .status(500)
+      .send("Erro ao excluir associação entre disciplina e curso.");
+  }
+});
+
+//ROTA PARA CRUD DE CURSO
+app.get("/curso", async (req, res) => {
+  try {
+    const cursos = await Curso.findAll({
+      include: [{ model: Coordenador, attributes: ['nome'] }]
+    });
+    const coordenadores = await Coordenador.findAll();
+    res.render("cad_curso", { cursos, coordenadores });
+  } catch (error) {
+    console.error("Erro ao buscar cursos:", error);
+    res.status(500).send("Erro ao buscar cursos.");
+  }
+});
+
+
+// Rota para inserir ou editar um curso
+app.post("/editar_curso", async (req, res) => {
+  try {
+    const { nome, coordenador_idCoordenador, action } = req.body;
+
+    if (action === "incluir") {
+      await Curso.create({ nome, coordenador_idCoordenador });
+    } else if (action === "alterar") {
+      const id_curso = req.body.id_curso;
+      await Curso.update({ nome, coordenador_idCoordenador }, { where: { id_curso } });
+    } else {
+      res.status(400).send("Ação inválida.");
+    }
+    res.redirect("/curso");
+  } catch (error) {
+    console.error("Erro ao inserir ou editar curso:", error);
+    res.status(500).send("Erro ao inserir ou editar curso.");
+  }
+});
+
+// Rota para excluir um curso
+app.post("/excluir_curso/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Curso.destroy({ where: { id_curso: id } });
+    res.redirect("/curso");
+  } catch (error) {
+    console.error("Erro ao excluir curso:", error);
+    res.status(500).send("Erro ao excluir curso.");
+  }
+});
+
+
+
+
 
 //TESTANDO A CONEXÃO 
 connection

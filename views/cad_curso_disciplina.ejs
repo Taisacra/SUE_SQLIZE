@@ -25,8 +25,7 @@
       <label for="disciplina">Disciplina:</label>
       <select id="disciplina" name="disciplina" required>
         <% disciplinas.forEach(function(disciplina) { %>
-        <option
-          value="<%= disciplina.id_disciplina %>"
+        <option value="<%= disciplina.id_disciplina %>"
           data-id="<%= disciplina.id_disciplina %>"
         >
           <%= disciplina.nome_disciplina %>
@@ -38,8 +37,7 @@
       <!-- Botões para confirmar a inclusão ou edição -->
       <button type="submit" name="action" value="alterar">Alterar</button>
       <button type="submit" name="action" value="incluir">Incluir</button>
-      <input type="hidden" id="id_curso" name="id_curso" />
-      <input type="hidden" id="id_disciplina" name="id_disciplina" />
+      <input type="hidden" id="id_disciplina_curso" name="id_disciplina_curso"/>
     </form>
 
     <!-- Tabela para exibir as associações entre curso e disciplina -->
@@ -53,20 +51,20 @@
         </tr>
       </thead>
       <tbody>
-        <% disciplinaCursosVW.forEach(function(disciplinaCursoVW) { %>
+        <% disciplinaCursos.forEach(function(disciplinaCurso) { %>
         <tr>
-          <td><%= disciplinaCursoVW.nome_curso %></td>
-          <td><%= disciplinaCursoVW.nome_disciplina %></td>
+          <td><%= disciplinaCurso.curso.nome_curso %></td>
+          <td><%= disciplinaCurso.disciplina.nome_disciplina %></td>
           <td>
             <!-- Botão para editar associação -->
             <button
-              onclick="preencherFormulario('<%= disciplinaCursoVW.id_curso %>', '<%= disciplinaCursoVW.id_disciplina %>')"
+              onclick="preencherFormulario('<%= disciplinaCurso.curso.id_curso %>', '<%= disciplinaCurso.disciplina.id_disciplina %>', '<%= disciplinaCurso.id_disciplina_curso %>')"
             >
               Editar
             </button>
             <!-- Formulário para excluir associação -->
             <form
-              action="/excluir_disciplina_curso/<%= disciplinaCursoVW.id_curso %>/<%= disciplinaCursoVW.id_disciplina %>"
+              action="/excluir_disciplina_curso/<%= disciplinaCurso.id_disciplina_curso %>"
               method="POST"
             >
               <button type="submit">Excluir</button>
@@ -78,26 +76,12 @@
     </table>
 
     <script>
-      // Funções para obter nomes a partir dos IDs
-      function getCursoNome(id_curso) {
-        const cursos = "<%= JSON.stringify(cursos) %>";
-        const curso = cursos.find((c) => c.id_curso === id_curso);
-        return curso ? curso.nome_curso : "Curso não encontrado";
-      }
-
-      function getDisciplinaNome(id_disciplina) {
-        const disciplinas = "<%= JSON.stringify(disciplinas) %>";
-        const disciplina = disciplinas.find(
-          (d) => d.id_disciplina === id_disciplina
-        );
-        return disciplina
-          ? disciplina.nome_disciplina
-          : "Disciplina não encontrada";
-      }
       // Função para preencher os campos do formulário ao clicar em editar
-      function preencherFormulario(cursoId, disciplinaId) {
+      function preencherFormulario(cursoId, disciplinaId, disciplinaCursoId) {
         document.getElementById("curso").value = cursoId;
         document.getElementById("disciplina").value = disciplinaId;
+        document.getElementById("id_disciplina_curso").value =
+        disciplinaCursoId;
       }
     </script>
   </body>

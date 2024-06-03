@@ -1,15 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crud Curso</title>
-</head>
-<body>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD Curso</title>
+  </head>
+  <body>
     <h1>CRUD de Curso</h1>
-    <form action="/editar_curso"  method="POST">
 
-        
+    <!-- Formulário para adicionar ou editar associação entre curso e disciplina -->
+    <form action="/editar_curso" method="POST">
+      <!-- Select para escolher o curso -->
+      <label for="coordenador_idCoordenador">Coordenador:</label>
+      <select id="coordenador_idCoordenador" name="coordenador_idCoordenador" required>
+        <% coordenadores.forEach(function(coordenador) { %>
+        <option value="<%= coordenador.idCoordenador %>" data-id="<%= coordenador.idCoordenador %>">
+          <%= coordenador.Usuario_idUsuario.nome_usuario %>
+        </option>
+        <% }); %>
+      </select>
+      <br />
+
+      <!-- Select para escolher a disciplina -->
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required />
+      <br />
+
+      <!-- Botões para confirmar a inclusão ou edição -->
+      <button type="submit" name="action" value="alterar">Alterar</button>
+      <button type="submit" name="action" value="incluir">Incluir</button>
+      <input type="hidden" id="id_curso" name="id_curso"/>
     </form>
-</body>
+
+    <!-- Tabela para exibir as associações entre curso e disciplina -->
+    <h2>Associações entre Curso e Coordenador</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Coordenador</th>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cursos.forEach(function(curso) { %>
+        <tr>
+          <td><%= curso.coordenador.usuario.nome_usuario %></td>
+          <td><%= curso.nome %></td>
+          <td>
+            <!-- Botão para editar associação -->
+            <button
+              onclick="preencherFormulario('<%= curso.nome %>', '<%= curso.coordenador.usuario.nome_usuario %>', '<%= curso.id_curso %>')"
+            >
+              Editar
+            </button>
+            <!-- Formulário para excluir associação -->
+            <form
+              action="/excluir_curso/<%= curso.id_curso %>"
+              method="POST"
+            >
+              <button type="submit">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <script>
+      // Função para preencher os campos do formulário ao clicar em editar
+      function preencherFormulario(coordenador_idCoordenador, nome, id_curso) {
+        document.getElementById("coordenador_idCoordenador").value = coordenador_idCoordenador;
+        document.getElementById("nome").value = nome;
+        document.getElementById("id_curso").value = id_curso;
+      }
+    </script>
+  </body>
 </html>

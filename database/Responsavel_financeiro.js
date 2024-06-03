@@ -36,7 +36,7 @@ async function sincronizarResponsavel_financeiro() {
 
 //Disciplina.sync({ force: false }).then(() => {});
 
-module.exports = {Responsavel_financeiro, sincronizarResponsavel_financeiro};
+module.exports = Responsavel_financeiro;
 //module.exports = sincronizarDisciplina();
 
  /* module.exports = {

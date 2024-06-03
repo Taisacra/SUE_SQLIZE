@@ -17,7 +17,13 @@ const Curso = connection.define(
     },
     coordenador_idCoordenador: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+        allowNull: false,
+        primaryKey: false,
+        autoIncrement: false, 
+        refereces: {
+          model:"Coordenador",
+          key:"idCoordenador",
+        },
     },
   },
   {
@@ -39,10 +45,10 @@ async function sincronizarCurso() {
 
 //Disciplina.sync({ force: false }).then(() => {});
 
-module.exports = {Curso, sincronizarCurso};
+module.exports = Curso;
 //module.exports = sincronizarCurso();
 
-/*  module.exports = {
+/*   module.exports = {
     Curso: Curso,
     sincronizarCurso: sincronizarCurso
   };  */

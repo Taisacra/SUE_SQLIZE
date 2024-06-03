@@ -14,6 +14,10 @@ const Coordenador = connection.define(
       Usuario_idUsuario: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        refereces: {
+          model:"Usuario",
+          key:"idUsuario",
+        },
           
       },
     }, 
@@ -39,10 +43,10 @@ const Coordenador = connection.define(
   
   //Disciplina.sync({ force: false }).then(() => {});
   
-  module.exports = {Coordenador, sincronizarCoordenador};
+  module.exports = Coordenador;
   //module.exports = sincronizarDisciplina();
   
-    /* module.exports = {
+   /*  module.exports = {
       Coordenador: Coordenador,
       sincronizarCoordenador: sincronizarCoordenador
     };  */

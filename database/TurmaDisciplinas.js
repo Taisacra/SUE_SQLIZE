@@ -3,31 +3,45 @@ const { DataTypes, Sequelize } = require("sequelize");
 const connection = require("./database");
 
 // Definição do modelo (MODEL) que corresponde à uma tabela do banco de dados.
-const Turma_has_Disciplinas = connection.define(
-  "turma_has_disciplinas",
+const TurmaDisciplinas = connection.define(
+  "turmaDisciplinas",
   {
-    Turma_idTurma: {
+    idTurmaDisciplina: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
+    Turma_idTurma: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: false,
+      autoIncrement: false,
+      refereces: {
+        model:"Turma",
+        key:"idTurma",
+      },
+    },
     Disciplia_idDisciplina: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
+      primaryKey: false,
       autoIncrement: false, 
+      refereces: {
+        model:"Disciplina",
+        key:"id_disciplina",
+      },
     },
   },
   {
     timestamps: true, // Habilita a criação automática de campos de timestamp
-    tableName: "turma_has_disciplinas", // Nome da tabela no banco de dados
+    tableName: "turmaDisciplinas", // Nome da tabela no banco de dados
   }
 );
 
-async function sincronizarTurma_has_Disciplinas() {
+async function sincronizarTurmaDisciplinas() {
   try {
-    await Turma_has_Disciplinas.sync({ force: false });
+    await TurmaDisciplinas.sync({ force: false });
   } catch (error) {
     console.error("Erro ao sincronizar a tabela: ", error);
   } finally {
@@ -38,10 +52,10 @@ async function sincronizarTurma_has_Disciplinas() {
 
 //Disciplina.sync({ force: false }).then(() => {});
 
-module.exports = {Turma_has_Disciplinas, sincronizarTurma_has_Disciplinas};
+module.exports = TurmaDisciplinas;
 //module.exports = sincronizarDisciplina();
 
-  /* module.exports = {
-    Turma_has_Disciplinas: Turma_has_Disciplinas,
-    sincronizarTurma_has_Disciplinas: sincronizarTurma_has_Disciplinas
-  };  */ 
+ /*   module.exports = {
+    TurmaDisciplinas: TurmaDisciplinas,
+    sincronizarTurmaDisciplinas: sincronizarTurmaDisciplinas
+  };   */

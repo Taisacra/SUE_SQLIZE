@@ -22,7 +22,7 @@ const Professor_has_Disciplina = require("./database/Professor_has_disciplina");
 const Professor = require("./database/Professor");
 const Responsavel_Financeiro = require("./database/Responsavel_financeiro");
 const Turma_has_aluno = require("./database/Turma_has_aluno");
-const Turma_has_Disciplinas = require("./database/Turma_has_disciplina");
+const TurmaDisciplinas = require("./database/TurmaDisciplinas");
 const Turma = require('./database/Turma');
 const Usuario = require("./database/Usuario");
 const CursoDisciplinaVW = require("./database/cursoDisciplinaVW");
@@ -39,13 +39,13 @@ DisciplinaCurso.sincronizarDisciplinaCurso();
  Pagamento.sincronizarPagamento();
  Professor_has_Disciplina.sincronizarProfessor_has_Disciplina();
  Professor.sincronizarProfessor();
+ TurmaDisciplinas.sincronizarTurmaDisciplinas();
  Responsavel_Financeiro.sincronizarResponsavel_financeiro();
  Turma_has_aluno.sincronizarTurma_has_aluno();
- Turma_has_Disciplinas.sincronizarTurma_has_Disciplinas();
  Turma.sincronizarTurma();
  Usuario.sincronizarUsuario(); */
 
- 
+
 
 // ROTA PARA CRUD DISCIPLINA
 app.get("/disciplinas", (req, res) => {

@@ -15,6 +15,10 @@ const Responsavel_financeiro = connection.define(
     usuario_idUsuario: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      refereces: {
+        model:"Usuario",
+        key:"idUsuario",
+      },
     },
   },
   {
@@ -39,7 +43,7 @@ async function sincronizarResponsavel_financeiro() {
 module.exports = Responsavel_financeiro;
 //module.exports = sincronizarDisciplina();
 
- /* module.exports = {
+/*  module.exports = {
   Responsavel_financeiro: Responsavel_financeiro,
     sincronizarResponsavel_financeiro: sincronizarResponsavel_financeiro
-  };  */
+  };   */
